@@ -51,10 +51,18 @@ def go(config: DictConfig):
             )
 
         if "basic_cleaning" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "basic_cleaning"),
+                "main",
+                parameters={
+                    "input_artifact": "sample.csv:latest",
+                    "output_artifact": "clean_sample.csv",
+                    "output_type": "cleaned_data",
+                    "output_description": "Data with outliers and invalid prices removed",
+                    "min_price": str(config["etl"]["min_price"]),
+                    "max_price": str(config["etl"]["max_price"]),
+                },
+            )
 
         if "data_check" in active_steps:
             ##################
